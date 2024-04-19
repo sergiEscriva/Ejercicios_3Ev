@@ -1,4 +1,4 @@
-package Practica;
+package practica;
 
 import java.util.Scanner;
 
@@ -38,7 +38,7 @@ public class Problemas { // Asume fichero llamado solution.java
 
 	} // main
 	public static void comparar(int[][] datosProblemas) {
-		f
+
 
 
 
