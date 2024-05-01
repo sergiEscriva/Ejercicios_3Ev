@@ -22,25 +22,13 @@ public class Main {
 		boolean isEncriptado = Boolean.FALSE;
 		System.out.println("Bienvenido, porfavor introduzca usuario y contraseña");
 		try {
-			prueba(2);
-			prueba(1);
 			datosCorrectos();
 			IntroducirDatos();
-			prueba(2);
-			isEncriptado = Boolean.TRUE;
 			leer.close();
 		} catch (Exception e) {
 			LOGGER.error("Si ves esto es muy malo");
-		}finally {
-			if (!isEncriptado){
-				prueba(2);
-			}
 		}
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run() {
-				prueba(2);
-			}
-		});
+
 	}
 
 	public static void IntroducirDatos() {
@@ -119,65 +107,4 @@ public class Main {
 		return false;
 	}
 
-	public static void prueba(int opcion) {
-		try {
-			ArrayList<String> lineas = new ArrayList<>();
-			try (BufferedReader br = new BufferedReader(new FileReader(RUTA))) {
-				String linea;
-				while ((linea = br.readLine()) != null) {
-					lineas.add(linea);
-				}
-			}
-
-			if (opcion == 1) {
-				for (int i = 0; i < lineas.size(); i++) {
-					lineas.set(i, desencriptar(lineas.get(i)));
-				}
-
-			} else {
-				for (int i = 0; i < lineas.size(); i++) {
-					lineas.set(i, encriptar(lineas.get(i)));
-				}
-			}
-
-			try (FileWriter writer = new FileWriter(RUTA)) {
-				for (String linea : lineas) {
-					writer.write(linea + "\n");
-				}
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public static String encriptar(String linea) {
-		ArrayList<Integer> valorAsci = sacarValorAsci(linea);
-		StringBuilder sb = new StringBuilder();
-		for (int num : valorAsci) {
-			int valorEncriptado = num + 3;
-			char letra = (char) valorEncriptado;
-			sb.append(letra);
-		}
-		return sb.toString();
-	}
-
-	public static String desencriptar(String linea) {
-		ArrayList<Integer> valorAsci = sacarValorAsci(linea);
-		StringBuilder sb = new StringBuilder();
-		for (int num : valorAsci) {
-			int valorDesencriptado = num - 3;
-			char letra = (char) valorDesencriptado;
-			sb.append(letra);
-		}
-		return sb.toString();
-	}
-
-	public static ArrayList<Integer> sacarValorAsci(String palabra) {
-		ArrayList<Integer> valorPalabra = new ArrayList<>();
-		for (int i = 0; i < palabra.length(); i++) {
-			char caracter = palabra.charAt(i);
-			valorPalabra.add((int) caracter);
-		}
-		return valorPalabra;
-	}
 }
