@@ -56,6 +56,7 @@ public class Main {
 		if (pila.isEmpty()) {
 			System.out.println("La pila esta vacia");
 		}
+
 		Iterator<Integer> iterator = pila.iterator();
 		while (iterator.hasNext()) {
 			System.out.println(iterator.next());
