@@ -13,8 +13,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Main {
-aaaaaaaaaaaaaaaaaaaaa
+
 	static Scanner leer = new Scanner(System.in);
+	static ArrayList<String> listaUsuariosEncripatda = new ArrayList<String>();
 	static ArrayList<Usuario> listaUsuarios = new ArrayList<Usuario>();
 	static char finalizar;
 	private final static Logger LOGGER = LogManager.getLogger();
@@ -26,7 +27,7 @@ aaaaaaaaaaaaaaaaaaaaa
 		boolean isEncriptado = Boolean.FALSE;
 		System.out.println("Bienvenido, porfavor introduzca usuario y contraseña");
 		try {
-			datosCorrectos();
+			datosEncriptados();
 			IntroducirDatos();
 			leer.close();
 		} catch (Exception e) {
@@ -44,6 +45,7 @@ aaaaaaaaaaaaaaaaaaaaa
 				System.out.print("Contraseña: ");
 				String contrasenya = leer.next();
 				Usuario usuarioAComprobar = new Usuario(nombre, contrasenya);
+
 				Usuario usuarioComprobado = comprobarDatos(usuarioAComprobar);
 				if (usuarioComprobado != null) {
 					System.out.println("Permitido!!!");
@@ -56,7 +58,7 @@ aaaaaaaaaaaaaaaaaaaaa
 					leer.nextLine();
 					if (alta == 's') {
 						darAlta();
-					}else {
+					} else {
 						System.out.println("Me las piro vampiro");
 						System.exit(0);
 					}
@@ -80,11 +82,10 @@ aaaaaaaaaaaaaaaaaaaaa
 		return null;
 	}
 
-
-	public static void datosCorrectos() {
+	public static void datosEncriptados() {
 		String linea;
 		int contador = 0;
-		String[] usuarioContrasenya = new String[2];
+		String[] usuarioContrasenya;
 		try (BufferedReader br = new BufferedReader(new FileReader(RUTA))) {
 			while ((linea = br.readLine()) != null) {
 
@@ -92,15 +93,40 @@ aaaaaaaaaaaaaaaaaaaaa
 				if (contador == 1) {
 					continue;
 				}
-				usuarioContrasenya = linea.split(";");
-				listaUsuarios.add(new Usuario(usuarioContrasenya[0], usuarioContrasenya[1]));
+				listaUsuariosEncripatda.add(linea);
 
 			}
 
 		} catch (IOException e) {
 			LOGGER.error("Fallo en la lectura del archivo");
 		}
+		datosCorrectos();
+	}
 
+	public static void datosCorrectos() {
+		listaUsuarios = desencriptarLista();
+
+	}
+
+	public static ArrayList<Usuario> desencriptarLista() {
+		ArrayList listaDesencriptada = new ArrayList<>();
+
+		String lineaCompleta;
+		String[] usuarioContrasenya;
+
+		for (int i = 0; i < listaUsuariosEncripatda.size(); i++) {
+			StringBuilder lineaSeparada = new StringBuilder();
+			ArrayList<Integer> valorAsci = sacarValorAsci(String.valueOf(listaUsuariosEncripatda.get(i)));
+			for (int num : valorAsci) {
+				int valorEncriptado = num - 3;
+				char letra = (char) valorEncriptado;
+				lineaSeparada.append(letra);
+			}
+			lineaCompleta = lineaSeparada.toString();
+			usuarioContrasenya = lineaCompleta.split(";");
+			listaDesencriptada.add(new Usuario(usuarioContrasenya[0], usuarioContrasenya[1]));
+		}
+		return listaDesencriptada;
 	}
 
 	public static void darAlta() {
@@ -215,10 +241,11 @@ aaaaaaaaaaaaaaaaaaaaa
 	}
 
 	public static boolean anyadirSistema(String nombre, String contrasenya) {
+        String nombreEncriptado = encriptar(nombre);
+		String contrasenyaEncripatda = encriptar(contrasenya);
 
 		try (FileWriter fileWriter = new FileWriter(RUTA, true)) {
-			fileWriter.write("\n" + nombre + ";" + contrasenya);
-			listaUsuarios.add(new Usuario(nombre, contrasenya));
+			fileWriter.write("\n" + nombreEncriptado + ">" + contrasenyaEncripatda);
 			return true;
 		} catch (IOException e) {
 			LOGGER.error("Error al crear usuario");
@@ -263,5 +290,27 @@ aaaaaaaaaaaaaaaaaaaaa
 		return matcher.matches();
 	}
 
+	public static ArrayList<Integer> sacarValorAsci(String palabra) {
+
+		ArrayList<Integer> valorPalabra = new ArrayList<>();
+		for (int i = 0; i < palabra.length(); i++) {
+			char caracter = palabra.charAt(i);
+			valorPalabra.add((int) caracter);
+		}
+		return valorPalabra;
+	}
+
+	public static String encriptar(String palabra){
+		StringBuilder lineaSeparada = new StringBuilder();
+		String lineaCompleta;
+		ArrayList<Integer> valorAsci = sacarValorAsci(palabra);
+		for (int num : valorAsci) {
+			int valorEncriptado = num + 3;
+			char letra = (char) valorEncriptado;
+			lineaSeparada.append(letra);
+		}
+		return lineaCompleta = lineaSeparada.toString();
+
+	}
 
 }
