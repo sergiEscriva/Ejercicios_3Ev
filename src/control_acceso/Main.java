@@ -39,7 +39,7 @@ public class Main {
 	public static void IntroducirDatos() {
 		try {
 			do {
-				System.out.print("Usuario: ");
+				System.out.print("Nombre: ");
 				String nombre = leer.next();
 
 				System.out.print("Contraseña: ");
@@ -85,7 +85,7 @@ public class Main {
 	public static void datosEncriptados() {
 		String linea;
 		int contador = 0;
-		String[] usuarioContrasenya;
+
 		try (BufferedReader br = new BufferedReader(new FileReader(RUTA))) {
 			while ((linea = br.readLine()) != null) {
 
@@ -241,11 +241,13 @@ public class Main {
 	}
 
 	public static boolean anyadirSistema(String nombre, String contrasenya) {
-        String nombreEncriptado = encriptar(nombre);
+		String nombreEncriptado = encriptar(nombre);
 		String contrasenyaEncripatda = encriptar(contrasenya);
 
 		try (FileWriter fileWriter = new FileWriter(RUTA, true)) {
 			fileWriter.write("\n" + nombreEncriptado + ">" + contrasenyaEncripatda);
+			listaUsuariosEncripatda.clear();
+			datosEncriptados();
 			return true;
 		} catch (IOException e) {
 			LOGGER.error("Error al crear usuario");
@@ -300,7 +302,7 @@ public class Main {
 		return valorPalabra;
 	}
 
-	public static String encriptar(String palabra){
+	public static String encriptar(String palabra) {
 		StringBuilder lineaSeparada = new StringBuilder();
 		String lineaCompleta;
 		ArrayList<Integer> valorAsci = sacarValorAsci(palabra);
