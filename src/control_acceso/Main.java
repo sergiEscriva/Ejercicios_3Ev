@@ -24,7 +24,6 @@ public class Main {
 	private static final String ANSI_RESET = "\u001B[0m";
 
 	public static void main(String[] args) {
-		boolean isEncriptado = Boolean.FALSE;
 		System.out.println("Bienvenido, porfavor introduzca usuario y contraseña");
 		try {
 			datosEncriptados();
@@ -105,14 +104,13 @@ public class Main {
 
 	public static void datosCorrectos() {
 		listaUsuarios = desencriptarLista();
-
 	}
 
 	public static ArrayList<Usuario> desencriptarLista() {
 		ArrayList listaDesencriptada = new ArrayList<>();
 
 		String lineaCompleta;
-		String[] usuarioContrasenya;
+		String[] datosUsuario;
 
 		for (int i = 0; i < listaUsuariosEncripatda.size(); i++) {
 			StringBuilder lineaSeparada = new StringBuilder();
@@ -123,13 +121,19 @@ public class Main {
 				lineaSeparada.append(letra);
 			}
 			lineaCompleta = lineaSeparada.toString();
-			usuarioContrasenya = lineaCompleta.split(";");
-			listaDesencriptada.add(new Usuario(usuarioContrasenya[0], usuarioContrasenya[1]));
+			datosUsuario = lineaCompleta.split(";");
+			if (datosUsuario.length == 9) {
+				listaDesencriptada.add(new Usuario(datosUsuario[0], datosUsuario[1], datosUsuario[2], datosUsuario[3], datosUsuario[4], datosUsuario[5], datosUsuario[6], Integer.parseInt(datosUsuario[7]), Integer.parseInt(datosUsuario[8])));
+
+			} else {
+				listaDesencriptada.add(new Usuario(datosUsuario[0], datosUsuario[1], datosUsuario[2], datosUsuario[3], datosUsuario[4], datosUsuario[5], Integer.parseInt(datosUsuario[6]), Integer.parseInt(datosUsuario[7])));
+			}
 		}
 		return listaDesencriptada;
 	}
 
 	public static void darAlta() {
+		Usuario usuario;
 		String nombre;
 		String contrasenya;
 		String correo;
@@ -137,6 +141,7 @@ public class Main {
 		String nick;
 		String telefono;
 		String repetirContrasenya;
+		int contador = 0;
 
 		System.out.println(ANSI_BLUE + "A continuacion se le pediran una serie de datos para darse de alta en nuestro sistema \n");
 		try {
@@ -223,16 +228,17 @@ public class Main {
 			String[] nombreCompleto = nombre.split(" ");
 
 			if (nombreCompleto.length == 2) {
-				Usuario usuario = new Usuario(contrasenya, nombre, nombreCompleto[0], correo, ip, nick, Integer.parseInt(telefono));
+				usuario = new Usuario(nombre, contrasenya, nombreCompleto[0], correo, ip, nick, Integer.parseInt(telefono), contador);
 				listaUsuarios.add(usuario);
+				anyadirSistema(usuario);
 
 			} else if (nombreCompleto.length == 3) {
-				Usuario usuario = new Usuario(contrasenya, nombre, nombreCompleto[0], nombreCompleto[1], correo, ip, nick, Integer.parseInt(telefono));
+				usuario = new Usuario(nombre, contrasenya, nombreCompleto[0], nombreCompleto[1], correo, ip, nick, Integer.parseInt(telefono), contador);
 				listaUsuarios.add(usuario);
+				anyadirSistema(usuario);
 			}
 
 
-			anyadirSistema(nombreCompleto[nombreCompleto.length - 1], contrasenya);
 		} catch (RuntimeException e) {
 			LOGGER.error("Fallo en la introduccion de datos" + e.getStackTrace());
 		}
@@ -240,20 +246,115 @@ public class Main {
 
 	}
 
-	public static boolean anyadirSistema(String nombre, String contrasenya) {
-		String nombreEncriptado = encriptar(nombre);
-		String contrasenyaEncripatda = encriptar(contrasenya);
-
-		try (FileWriter fileWriter = new FileWriter(RUTA, true)) {
-			fileWriter.write("\n" + nombreEncriptado + ">" + contrasenyaEncripatda);
-			listaUsuariosEncripatda.clear();
-			datosEncriptados();
-			return true;
-		} catch (IOException e) {
-			LOGGER.error("Error al crear usuario");
+	public static void darAlta() {
+		try {
+			Usuario usuario = obtenerDatosUsuario();
+			listaUsuarios.add(usuario);
+			anyadirSistema(usuario);
+		} catch (RuntimeException e) {
+			LOGGER.error("Fallo en la introduccion de datos" + e.getStackTrace());
 		}
-		return false;
 	}
+
+	public static Usuario obtenerDatosUsuario() {
+		String nombre = obtenerNombreValido();
+		String contrasenya = obtenerContrasenyaValida();
+		String correo = obtenerCorreoValido();
+		String ip = obtenerIpValida();
+		String nick = obtenerNickValido();
+		String telefono = obtenerTelefonoValido();
+		int contador = 0;
+		String[] nombreCompleto = nombre.split(" ");
+		if (nombreCompleto.length == 2) {
+			return new Usuario(nombre, contrasenya, nombreCompleto[0], correo, ip, nick, Integer.parseInt(telefono), contador);
+		} else {
+			return new Usuario(nombre, contrasenya, nombreCompleto[0], nombreCompleto[1], correo, ip, nick, Integer.parseInt(telefono), contador);
+		}
+
+	}
+	private static String obtenerNombreValido() {
+		String nombre;
+		do {
+			System.out.println("Introduzca APELLIDOS y NOMBRE ejemplo:\n" +
+					"Uroz Porrero Bea");
+			nombre = leer.nextLine();
+
+			if (!comprobarNombre(nombre)) {
+				System.err.println("Formato de nombre incorrecto");
+			}
+		} while (!comprobarNombre(nombre));
+		return nombre;
+	}
+	private static String obtenerContrasenyaValida() {
+		String contrasenya;
+		do {
+			System.out.println("Introduzca su contraseña \n" +
+					"-Caracteres minimos 8\n" +
+					"-Debe contener minusculas y mayusculas\n" +
+					"-Numeros y simbolos\n" +
+					"ejemplo:" +
+					"Abc1234@");
+			contrasenya = leer.nextLine();
+
+			if (!comprobarContrasenya(contrasenya)) {
+				System.err.println("Formato de contraseña incorrecto");
+			}
+		} while (!comprobarContrasenya(contrasenya));
+		return contrasenya;
+	}
+	private static String obtenerCorreoValido() {
+		String correo;
+		do {
+			System.out.println("Introduzca su correo electronico");
+			correo = leer.nextLine();
+
+			if (!comprobarCorreo(correo)) {
+				System.err.println("Formato de correo incorrecto");
+			}
+		} while (!comprobarCorreo(correo));
+		return correo;
+	}
+	private static String obtenerIpValida() {
+		String ip;
+		do {
+			System.out.println("Introduzca su direccion IP, IPV4");
+			ip = leer.nextLine();
+
+			if (!comprobarIP(ip)) {
+				System.err.println("Formato de IP incorrecto");
+			}
+		} while (!comprobarIP(ip));
+		return ip;
+	}
+	private static String obtenerNickValido() {
+		String nick;
+		do {
+			System.out.println("Introduzca su nick\n" +
+					"-Todo minusculas\n" +
+					"-Unico simbolo permitido '_' ");
+			nick = leer.nextLine();
+
+			if (!comprobarNick(nick)) {
+				System.err.println("Formato de nick incorrecto");
+			}
+		} while (!comprobarNick(nick));
+		return nick;
+	}
+	private static String obtenerTelefonoValido() {
+		String telefono;
+		do {
+			System.out.println("Introduzca su telefono\n" +
+					"Sin region");
+			telefono = leer.nextLine();
+
+			if (!comprobarTelefono(telefono)) {
+				System.err.println("Formato de telefono incorrecto");
+			}
+		} while (!comprobarTelefono(telefono));
+		return telefono;
+	}
+
+
 
 	public static boolean comprobarNombre(String nombre) {
 		Pattern pattern = Pattern.compile("^[a-zA-Z-]{1,20}\\s[a-zA-Z-]{1,20}(\\s[a-zA-Z-]{1,20})?$");
@@ -291,6 +392,26 @@ public class Main {
 		Matcher matcher = pattern.matcher(telefono);
 		return matcher.matches();
 	}
+	public static boolean anyadirSistema(Usuario usuario) {
+		String nombreEncriptado = encriptar(usuario.getNombre());
+		String contrasenyaEncripatda = encriptar(usuario.getContrasenya());
+		String correoEncriptado = encriptar(usuario.getCorreo());
+		String ipEncriptada = encriptar(usuario.getIp());
+		String nickEncriptado = encriptar(usuario.getNick());
+		String telefonoEncriptado = encriptar(String.valueOf(usuario.getTelefono()));
+		String contador = encriptar(String.valueOf(usuario.getContador()));
+
+		try (FileWriter fileWriter = new FileWriter(RUTA, true)) {
+			fileWriter.write("\n" + nombreEncriptado + ">" + contrasenyaEncripatda + ">" + correoEncriptado + ">" + ipEncriptada + ">" + nickEncriptado + ">" + telefonoEncriptado + ">" + contador);
+			listaUsuariosEncripatda.clear();
+			datosEncriptados();
+			return true;
+		} catch (IOException e) {
+			LOGGER.error("Error al crear usuario");
+		}
+		return false;
+	}
+
 
 	public static ArrayList<Integer> sacarValorAsci(String palabra) {
 

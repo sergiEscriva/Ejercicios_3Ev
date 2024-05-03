@@ -19,7 +19,7 @@ public class Usuario {
 		this.nombre = nombre;
 
 	}
-	public Usuario(String contrasenya, String nombre, String apellido1, String apellido2, String correo, String ip, String nick, int telefono) {
+	public Usuario(String nombre, String contrasenya, String apellido1, String apellido2, String correo, String ip, String nick, int telefono, int contador) {
 		this.contrasenya = contrasenya;
 		this.nombre = nombre;
 		this.apellido1 = apellido1;
@@ -28,9 +28,10 @@ public class Usuario {
 		this.ip = ip;
 		this.nick = nick;
 		this.telefono = telefono;
+		this.contador = contador;
 	}
 
-	public Usuario(String contrasenya, String nombre, String apellido1, String correo, String ip, String nick, int telefono) {
+	public Usuario(String nombre, String contrasenya, String apellido1, String correo, String ip, String nick, int telefono, int contador) {
 		this.contrasenya = contrasenya;
 		this.nombre = nombre;
 		this.apellido1 = apellido1;
@@ -38,9 +39,34 @@ public class Usuario {
 		this.ip = ip;
 		this.nick = nick;
 		this.telefono = telefono;
+		this.contador = contador;
 	}
 
-	private int getContador() {
+	public String getApellido1() {
+		return apellido1;
+	}
+
+	public String getApellido2() {
+		return apellido2;
+	}
+
+	public String getCorreo() {
+		return correo;
+	}
+
+	public String getIp() {
+		return ip;
+	}
+
+	public String getNick() {
+		return nick;
+	}
+
+	public int getTelefono() {
+		return telefono;
+	}
+
+	public int getContador() {
 		return contador;
 	}
 
