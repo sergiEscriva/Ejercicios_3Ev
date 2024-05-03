@@ -1,4 +1,4 @@
-package comparadores;
+package List;
 
 import java.text.Collator;
 import java.time.LocalDate;
@@ -58,4 +58,6 @@ public class Estudiante implements Comparable<Estudiante>{
 		collator.setStrength(Collator.IDENTICAL);
 		return collator.compare(this.apellido, o.getApellido());
 	}
+
+
 }

@@ -17,18 +17,17 @@ public enum ValorCarta {
 	K(10);
 
 
-
-	private final int valor;
+	private final int VALOR;
 
 	ValorCarta(int valor) {
-		this.valor = valor;
+		this.VALOR = valor;
 	}
 
-	public int getValor() {
-		return valor;
+	public int getVALOR() {
+		return VALOR;
 	}
 
 	public  int obtenerPuntos(ValorCarta valorCarta){
-		return valorCarta.getValor();
+		return valorCarta.getVALOR();
 	}
 }
