@@ -132,119 +132,6 @@ public class Main {
 		return listaDesencriptada;
 	}
 
-	public static void darAlta() {
-		Usuario usuario;
-		String nombre;
-		String contrasenya;
-		String correo;
-		String ip;
-		String nick;
-		String telefono;
-		String repetirContrasenya;
-		int contador = 0;
-
-		System.out.println(ANSI_BLUE + "A continuacion se le pediran una serie de datos para darse de alta en nuestro sistema \n");
-		try {
-
-			do {
-				System.out.println("Introduzca APELLIDOS y NOMBRE ejemplo:\n" +
-						"Uroz Porrero Bea");
-				nombre = leer.nextLine();
-
-				if (!comprobarNombre(nombre)) {
-					System.err.println("Formato de nombre incorrecto");
-				}
-
-			} while (!comprobarNombre(nombre));
-
-			do {
-				System.out.println("Introduzca su contraseña \n" +
-						"-Caracteres minimos 8\n" +
-						"-Debe contener minusculas y mayusculas\n" +
-						"-Numeros y simbolos\n" +
-						"ejemplo:" +
-						"Abc1234@");
-				contrasenya = leer.nextLine();
-
-				if (!comprobarContrasenya(contrasenya)) {
-					System.err.println("Formato de contraseña incorrecto");
-				}
-
-			} while (!comprobarContrasenya(contrasenya));
-
-			do {
-				System.out.println("Introduzca su correo electronico");
-				correo = leer.nextLine();
-
-				if (!comprobarCorreo(correo)) {
-					System.err.println("Formato de correo incorrecto");
-				}
-
-			} while (!comprobarCorreo(correo));
-
-			do {
-				System.out.println("Introduzca su direccion IP, IPV4");
-				ip = leer.nextLine();
-
-				if (!comprobarIP(ip)) {
-					System.err.println("Formato de IP incorrecto");
-				}
-
-			} while (!comprobarIP(ip));
-
-			do {
-				System.out.println("Introduzca su nick\n" +
-						"-Todo minusculas\n" +
-						"-Unico simbolo permitido '_' ");
-				nick = leer.nextLine();
-
-				if (!comprobarNick(nick)) {
-					System.err.println("Formato de nick incorrecto");
-				}
-
-			} while (!comprobarNick(nick));
-
-			do {
-				System.out.println("Introduzca su telefono\n" +
-						"Sin region");
-				telefono = leer.nextLine();
-
-				if (!comprobarTelefono(telefono)) {
-					System.err.println("Formato de telefono incorrecto");
-				}
-
-			} while (!comprobarTelefono(telefono));
-
-			do {
-				System.out.println("Repite la contraseña");
-				repetirContrasenya = leer.nextLine();
-
-				if (!repetirContrasenya.equalsIgnoreCase(contrasenya)) {
-					System.err.println("Contraseñas no coinciden");
-				}
-			} while (!repetirContrasenya.equalsIgnoreCase(contrasenya));
-
-			System.out.println(ANSI_RESET + "Usted a completado el registro");
-			String[] nombreCompleto = nombre.split(" ");
-
-			if (nombreCompleto.length == 2) {
-				usuario = new Usuario(nombre, contrasenya, nombreCompleto[0], correo, ip, nick, Integer.parseInt(telefono), contador);
-				listaUsuarios.add(usuario);
-				anyadirSistema(usuario);
-
-			} else if (nombreCompleto.length == 3) {
-				usuario = new Usuario(nombre, contrasenya, nombreCompleto[0], nombreCompleto[1], correo, ip, nick, Integer.parseInt(telefono), contador);
-				listaUsuarios.add(usuario);
-				anyadirSistema(usuario);
-			}
-
-
-		} catch (RuntimeException e) {
-			LOGGER.error("Fallo en la introduccion de datos" + e.getStackTrace());
-		}
-
-
-	}
 
 	public static void darAlta() {
 		try {
@@ -392,6 +279,7 @@ public class Main {
 		Matcher matcher = pattern.matcher(telefono);
 		return matcher.matches();
 	}
+
 	public static boolean anyadirSistema(Usuario usuario) {
 		String nombreEncriptado = encriptar(usuario.getNombre());
 		String contrasenyaEncripatda = encriptar(usuario.getContrasenya());
