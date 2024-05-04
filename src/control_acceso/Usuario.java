@@ -19,6 +19,31 @@ public class Usuario {
 		this.nombre = nombre;
 
 	}
+	public Usuario(String nombre, String contrasenya, String apellido1, String apellido2, String correo, String ip, String nick, int telefono, int contador, LocalDate fechaAcceso) {
+		this.contrasenya = contrasenya;
+		this.nombre = nombre;
+		this.apellido1 = apellido1;
+		this.apellido2 = apellido2;
+		this.correo = correo;
+		this.ip = ip;
+		this.nick = nick;
+		this.telefono = telefono;
+		this.contador = contador;
+		this.fechaAcceso = fechaAcceso;
+	}
+
+	public Usuario(String nombre, String contrasenya, String apellido1, String correo, String ip, String nick, int telefono, int contador, LocalDate fechaAcceso) {
+		this.contrasenya = contrasenya;
+		this.nombre = nombre;
+		this.apellido1 = apellido1;
+		this.correo = correo;
+		this.ip = ip;
+		this.nick = nick;
+		this.telefono = telefono;
+		this.contador = contador;
+		this.fechaAcceso = fechaAcceso;
+	}
+
 	public Usuario(String nombre, String contrasenya, String apellido1, String apellido2, String correo, String ip, String nick, int telefono, int contador) {
 		this.contrasenya = contrasenya;
 		this.nombre = nombre;

@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -23,6 +24,7 @@ public class Main {
 	private final static String RUTA = "src\\control_acceso\\fichero_acceso\\fichero_acceso.csv";
 	private static final String ANSI_BLUE = "\u001B[34m";
 	private static final String ANSI_RESET = "\u001B[0m";
+	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
 	public static void main(String[] args) {
 		System.out.println("Bienvenido, porfavor introduzca usuario y contraseña");
@@ -123,11 +125,11 @@ public class Main {
 			datosUsuario = lineaCompleta.split(";");
 			String[] nombreCompleto = datosUsuario[0].split(" ");
 			if (nombreCompleto.length == 3) {
-				listaDesencriptada.add(new Usuario(nombreCompleto[2], datosUsuario[1], nombreCompleto[0], nombreCompleto[1], datosUsuario[2], datosUsuario[3], datosUsuario[4], Integer.parseInt(datosUsuario[5]), Integer.parseInt(datosUsuario[6])));
+				listaDesencriptada.add(new Usuario(nombreCompleto[2], datosUsuario[1], nombreCompleto[0], nombreCompleto[1], datosUsuario[2], datosUsuario[3], datosUsuario[4], Integer.parseInt(datosUsuario[5]), Integer.parseInt(datosUsuario[6]), LocalDate.parse(datosUsuario[7] , FORMATTER)));
 			} else if (datosUsuario.length == 2) {
 				listaDesencriptada.add(new Usuario(datosUsuario[0], datosUsuario[1]));
 			} else {
-				listaDesencriptada.add(new Usuario(nombreCompleto[1], datosUsuario[1], nombreCompleto[0], datosUsuario[3], datosUsuario[4], datosUsuario[5], Integer.parseInt(datosUsuario[6]), Integer.parseInt(datosUsuario[7])));
+				listaDesencriptada.add(new Usuario(nombreCompleto[1], datosUsuario[1], nombreCompleto[0], datosUsuario[2], datosUsuario[3], datosUsuario[4], datosUsuario[5], Integer.parseInt(datosUsuario[6]), Integer.parseInt(datosUsuario[7]), LocalDate.parse(datosUsuario[8] , FORMATTER)));
 			}
 		}
 		return listaDesencriptada;
