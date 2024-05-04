@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -25,20 +26,17 @@ public class Main {
 
 	public static void main(String[] args) {
 		System.out.println("Bienvenido, porfavor introduzca usuario y contraseña");
-		try {
-			datosEncriptados();
-			IntroducirDatos();
-			leer.close();
-		} catch (Exception e) {
-			LOGGER.error("Si ves esto es muy malo");
-		}
+
+		datosEncriptados();
+		IntroducirDatos();
+		leer.close();
 
 	}
 
 	public static void IntroducirDatos() {
 		try {
 			do {
-				System.out.print("Nombre: ");
+ 				System.out.print("Nombre: ");
 				String nombre = leer.next();
 
 				System.out.print("Contraseña: ");
@@ -75,6 +73,7 @@ public class Main {
 		for (Usuario buscarUsuario : listaUsuarios) {
 			if (buscarUsuario.getNombre().equals(usuario.getNombre()) && buscarUsuario.getContrasenya().equals(usuario.getContrasenya())) {
 				buscarUsuario.incrementarContador();
+				buscarUsuario.setFechaAcceso(LocalDate.now());
 				return buscarUsuario;
 			}
 		}
@@ -122,11 +121,13 @@ public class Main {
 			}
 			lineaCompleta = lineaSeparada.toString();
 			datosUsuario = lineaCompleta.split(";");
-			if (datosUsuario.length == 9) {
-				listaDesencriptada.add(new Usuario(datosUsuario[0], datosUsuario[1], datosUsuario[2], datosUsuario[3], datosUsuario[4], datosUsuario[5], datosUsuario[6], Integer.parseInt(datosUsuario[7]), Integer.parseInt(datosUsuario[8])));
-
+			String[] nombreCompleto = datosUsuario[0].split(" ");
+			if (nombreCompleto.length == 3) {
+				listaDesencriptada.add(new Usuario(nombreCompleto[2], datosUsuario[1], nombreCompleto[0], nombreCompleto[1], datosUsuario[2], datosUsuario[3], datosUsuario[4], Integer.parseInt(datosUsuario[5]), Integer.parseInt(datosUsuario[6])));
+			} else if (datosUsuario.length == 2) {
+				listaDesencriptada.add(new Usuario(datosUsuario[0], datosUsuario[1]));
 			} else {
-				listaDesencriptada.add(new Usuario(datosUsuario[0], datosUsuario[1], datosUsuario[2], datosUsuario[3], datosUsuario[4], datosUsuario[5], Integer.parseInt(datosUsuario[6]), Integer.parseInt(datosUsuario[7])));
+				listaDesencriptada.add(new Usuario(nombreCompleto[1], datosUsuario[1], nombreCompleto[0], datosUsuario[3], datosUsuario[4], datosUsuario[5], Integer.parseInt(datosUsuario[6]), Integer.parseInt(datosUsuario[7])));
 			}
 		}
 		return listaDesencriptada;
@@ -159,6 +160,7 @@ public class Main {
 		}
 
 	}
+
 	private static String obtenerNombreValido() {
 		String nombre;
 		do {
@@ -172,6 +174,7 @@ public class Main {
 		} while (!comprobarNombre(nombre));
 		return nombre;
 	}
+
 	private static String obtenerContrasenyaValida() {
 		String contrasenya;
 		do {
@@ -189,6 +192,7 @@ public class Main {
 		} while (!comprobarContrasenya(contrasenya));
 		return contrasenya;
 	}
+
 	private static String obtenerCorreoValido() {
 		String correo;
 		do {
@@ -201,6 +205,7 @@ public class Main {
 		} while (!comprobarCorreo(correo));
 		return correo;
 	}
+
 	private static String obtenerIpValida() {
 		String ip;
 		do {
@@ -213,6 +218,7 @@ public class Main {
 		} while (!comprobarIP(ip));
 		return ip;
 	}
+
 	private static String obtenerNickValido() {
 		String nick;
 		do {
@@ -227,6 +233,7 @@ public class Main {
 		} while (!comprobarNick(nick));
 		return nick;
 	}
+
 	private static String obtenerTelefonoValido() {
 		String telefono;
 		do {
@@ -240,7 +247,6 @@ public class Main {
 		} while (!comprobarTelefono(telefono));
 		return telefono;
 	}
-
 
 
 	public static boolean comprobarNombre(String nombre) {
@@ -288,9 +294,10 @@ public class Main {
 		String nickEncriptado = encriptar(usuario.getNick());
 		String telefonoEncriptado = encriptar(String.valueOf(usuario.getTelefono()));
 		String contador = encriptar(String.valueOf(usuario.getContador()));
+		String fechaAccesoEncriptada = encriptar(usuario.getFechaAcceso().toString());
 
 		try (FileWriter fileWriter = new FileWriter(RUTA, true)) {
-			fileWriter.write("\n" + nombreEncriptado + ">" + contrasenyaEncripatda + ">" + correoEncriptado + ">" + ipEncriptada + ">" + nickEncriptado + ">" + telefonoEncriptado + ">" + contador);
+			fileWriter.write("\n" + nombreEncriptado + ">" + contrasenyaEncripatda + ">" + correoEncriptado + ">" + ipEncriptada + ">" + nickEncriptado + ">" + telefonoEncriptado + ">" + contador + ">" + fechaAccesoEncriptada);
 			listaUsuariosEncripatda.clear();
 			datosEncriptados();
 			return true;
@@ -313,14 +320,13 @@ public class Main {
 
 	public static String encriptar(String palabra) {
 		StringBuilder lineaSeparada = new StringBuilder();
-		String lineaCompleta;
 		ArrayList<Integer> valorAsci = sacarValorAsci(palabra);
 		for (int num : valorAsci) {
 			int valorEncriptado = num + 3;
 			char letra = (char) valorEncriptado;
 			lineaSeparada.append(letra);
 		}
-		return lineaCompleta = lineaSeparada.toString();
+		return lineaSeparada.toString();
 
 	}
 

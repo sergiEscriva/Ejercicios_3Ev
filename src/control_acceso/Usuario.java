@@ -70,7 +70,11 @@ public class Usuario {
 		return contador;
 	}
 
-	private void setFechaAcceso(LocalDate fechaAcceso) {
+	public LocalDate getFechaAcceso() {
+		return fechaAcceso;
+	}
+
+	public void setFechaAcceso(LocalDate fechaAcceso) {
 		this.fechaAcceso = fechaAcceso;
 	}
 
