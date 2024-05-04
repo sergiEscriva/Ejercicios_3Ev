@@ -14,7 +14,7 @@ public class Usuario {
 	private int telefono;
 	private int contador;
 
-	public Usuario(String contrasenya, String nombre) {
+	public Usuario(String nombre, String contrasenya) {
 		this.contrasenya = contrasenya;
 		this.nombre = nombre;
 
