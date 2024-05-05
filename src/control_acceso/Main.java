@@ -64,7 +64,10 @@ public class Main {
 				}
 				System.out.println("Desea continuar? (s / n)");
 				finalizar = leer.next().charAt(0);
-
+				if (finalizar != 's') {
+					System.out.println(ANSI_BLUE + "Hasta la proxima" + ANSI_RESET);
+					anyadirSistema(usuarioComprobado);
+				}
 			} while (finalizar == 's');
 		} catch (RuntimeException e) {
 			LOGGER.error("Fallo en la introduccion de datos" + e.getStackTrace());
