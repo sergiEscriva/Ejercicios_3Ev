@@ -1,6 +1,5 @@
 package List;
 
-import java.text.Collator;
 import java.time.LocalDate;
 
 public class Estudiante implements Comparable<Estudiante>{
@@ -54,9 +53,15 @@ public class Estudiante implements Comparable<Estudiante>{
 
 	@Override
 	public int compareTo(Estudiante o) {
-		Collator collator = Collator.getInstance();
-		collator.setStrength(Collator.IDENTICAL);
-		return collator.compare(this.apellido, o.getApellido());
+		int comparador = Double.compare(this.notaMedia, o.getNotaMedia());
+		if (comparador == 0){
+			comparador = this.nombre.compareTo(o.getNombre());
+			if (comparador == 0){
+				return this.apellido.compareTo(o.getApellido());
+			}
+			return comparador;
+		}
+		return comparador;
 	}
 
 
