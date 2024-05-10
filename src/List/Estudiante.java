@@ -1,6 +1,7 @@
 package List;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class Estudiante implements Comparable<Estudiante>{
 	private String nombre;
@@ -44,6 +45,19 @@ public class Estudiante implements Comparable<Estudiante>{
 	}
 	public void setNotaMedia(double notaMedia) {
 		this.notaMedia = notaMedia;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Estudiante that = (Estudiante) o;
+		return Objects.equals(nombre, that.nombre) && Objects.equals(apellido, that.apellido);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(nombre, apellido, fechaNacimiento, notaMedia);
 	}
 
 	@Override

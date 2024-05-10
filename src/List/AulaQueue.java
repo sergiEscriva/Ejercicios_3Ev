@@ -11,7 +11,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-//TODO el fichero de los alumnos debe de ser csv y la primera linea era para el nombre de los campos
 public class AulaQueue {
 	private final static Logger LOGGER = LogManager.getLogger();
 	static LinkedList<Estudiante> estudiantes = new LinkedList<>();
@@ -26,10 +25,8 @@ public class AulaQueue {
 
 	/**
 	 * Método para crear usuarios a partir de un archivo de texto.
-	 *
-	 * @return Verdadero si se crearon usuarios, falso en caso contrario.
 	 */
-	public static boolean creacionUsuarios() {
+	public static void creacionUsuarios() {
 		String linea;
 		String[] lineaCompleta;
 		int contador = 0;
@@ -52,15 +49,12 @@ public class AulaQueue {
 			e.getMessage();
 		}
 		if (estudiantes.isEmpty()) {
-			return Boolean.FALSE;
 		} else {
-			return Boolean.TRUE;
 		}
 	}
 	public static void anyadirListaPriorityQueue(Estudiante estudiante){
 		estudianteQueue.add(estudiante);
 	}
-
 	public static void anyadirListaDeque(Estudiante estudiante){
 		estudiantesDeque.add(estudiante);
 	}
